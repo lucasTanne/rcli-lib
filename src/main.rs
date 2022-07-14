@@ -1,11 +1,13 @@
+use std::{env, process};
+use command::Context;
+
 mod rcli;
 mod command;
-
-use std::env;
+mod parser;
 
 // TEST
-fn bla(word: String) {
-    println!("Le mot magique est: {}", word);
+fn bla(context: Context) {
+    println!("Le mot magique est: {}", context.argument.unwrap());
 }
 
 fn main() {
@@ -14,8 +16,15 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     println!("{:?}", args);
 
-    let cmd: command::Command = command::Command::new("bla", bla);
+    let _query = parser::Parser::new(&args).unwrap_or_else(| err | {
+        println!("{}", err);
+        process::exit(1);
+    });
+
+    let cmd = command::Command::new("bla", bla);
 
     let mut _rcli = rcli::Rcli::new();
     _rcli.add_command(cmd);
+
+    _rcli.start(args);
 }

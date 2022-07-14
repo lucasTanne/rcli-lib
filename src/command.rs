@@ -1,4 +1,8 @@
-type Action = fn(a: String);
+pub struct Context {
+    pub command_name: String,
+    pub argument: Option<String>,
+}
+type Action = fn(context: Context);
 
 pub struct Command {
     name: &'static str,
@@ -13,7 +17,7 @@ impl Command {
         self.name
     }
 
-    pub fn execute(&self) {
-        (self.action);
+    pub fn execute(&self, context: Context) {
+        (self.action)(context);
     }
 }
