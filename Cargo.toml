@@ -1,7 +1,12 @@
 [package]
-name = "rcli"
+name = "rcli_lib"
+description = "Library to make a simple CLI app"
 version = "0.1.0"
 edition = "2021"
+repository = "github.com/lucasTanne/rcli-lib"
+
+[lib]
+name = "rcli_lib"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
