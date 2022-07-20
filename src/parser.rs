@@ -2,7 +2,11 @@ use crate::command::Context;
 
 pub struct Parser {}
 impl Parser {
-    pub fn new(args: &[String]) -> Result<Context, &str> {
+    pub fn new() -> Parser {
+        Parser {  }
+    }
+
+    pub fn parse(&self, args: &[String]) -> Result<Context, &str> {
         if args.len() < 2 {
             return Err("Not enough arguments");
         }

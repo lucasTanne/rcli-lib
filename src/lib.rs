@@ -1,5 +1,8 @@
 #![crate_name = "rcli_lib"]
 
+// Public modules
 pub mod rcli;
-pub mod parser;
 pub mod command;
+
+// Private modules
+mod parser;
