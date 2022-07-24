@@ -5,12 +5,18 @@ use crate::command::Context;
 use crate::parser::Parser;
 
 pub struct Rcli {
+    name: String,
     commands: HashMap<String, command::Command>,
     parser: Parser,
 }
 impl Rcli {
     pub fn new() -> Rcli{
-        Rcli { commands: HashMap::new(), parser: Parser::new() }
+        let default_name = "myCli";
+        Rcli { name: default_name.to_string(), commands: HashMap::new(), parser: Parser::new() }
+    }
+
+    pub fn set_name(&mut self, name: String) {
+        self.name = name;
     }
 
     pub fn add_command(&mut self, command: command::Command) {
