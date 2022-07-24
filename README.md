@@ -20,6 +20,7 @@ Then you can use the `cargo update` command to update your project's dependancie
 
 ## How use rcli
 
+Actually rcli support only command composed by: `command argument`  
 The following code is a basic exemple to use rcli:
 
 ```rust
