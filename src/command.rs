@@ -5,16 +5,16 @@ pub struct Context {
 type Action = fn(context: Context);
 
 pub struct Command {
-    name: &'static str,
+    name: String,
     action: Action,
 }
 impl Command {
-    pub fn new(name: &'static str, action: Action) -> Command {
+    pub fn new(name: String, action: Action) -> Command {
         Command { name: name, action }
     }
 
     pub fn get_name(&self) -> &str {
-        self.name
+        &self.name
     }
 
     pub fn execute(&self, context: Context) {

@@ -1,46 +1,62 @@
-use std::process;
 use std::collections::HashMap;
-use crate::command;
+use crate::command::Command;
 use crate::command::Context;
 use crate::parser::Parser;
 
 pub struct Rcli {
     name: String,
-    commands: HashMap<String, command::Command>,
-    parser: Parser,
+    commands: HashMap<String, Command>,
 }
 impl Rcli {
     pub fn new() -> Rcli{
-        let default_name = "myCli";
-        Rcli { name: default_name.to_string(), commands: HashMap::new(), parser: Parser::new() }
+        let default_name = ("myCli").to_string();
+        Rcli { name: default_name, commands: HashMap::new() }
     }
 
     pub fn set_name(&mut self, name: String) {
         self.name = name;
     }
 
-    pub fn add_command(&mut self, command: command::Command) {
-        self.commands.insert(command.get_name().to_string(), command);
-    }
+    pub fn add_command(&mut self, command: Command) -> Result<(), String> {
+        let command_name = command.get_name().to_string();
+        let item = self.commands.get(&command_name);
 
-    fn execute(&self, context: Context) {
-        let cmd = self.commands.get(&context.command_name);
-        if !cmd.is_none() {
-            println!("found: {}", context.command_name);
-            let command = cmd.unwrap();
-            command.execute(context);
-        } else {
-            panic!("Command not found");
+        match item {
+            None => {
+                self.commands.insert(command_name, command);
+                Ok(())
+            },
+            Some(_) => Err(format!("The command \"{}\" already exist!", command_name))
         }
     }
 
-    pub fn start (&self, args: Vec<String>) {
-        let _context = self.parser.parse(&args)
-            .unwrap_or_else(| err | {
-                println!("{}", err);
-                process::exit(1);
-            });
+    pub fn start (&self, args: Vec<String>) -> Result<(), String> {
+        let parser: Parser = Parser::new();
+        let context = parser.parse(&args);
 
-        self.execute(_context);
+        match context {
+            Err(err) => Err(err),
+            Ok(ctx) => {
+                let result = self.execute(ctx);
+
+                match result {
+                    Err(err) => Err(err),
+                    Ok(()) => Ok(())
+                }
+            }
+        }
+    }
+
+    fn execute(&self, context: Context) -> Result<(), String> {
+        let command_name = context.command_name.to_string();
+        let item = self.commands.get(&command_name);
+
+        match item {
+            None => Err(format!("The command \"{}\" doesn't exist!", command_name)),
+            Some(cmd) => {
+                cmd.execute(context);
+                Ok(())
+            }
+        }
     }
 }

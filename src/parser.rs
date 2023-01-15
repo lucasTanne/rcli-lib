@@ -6,9 +6,9 @@ impl Parser {
         Parser {  }
     }
 
-    pub fn parse(&self, args: &[String]) -> Result<Context, &str> {
+    pub fn parse(&self, args: &[String]) -> Result<Context, String> {
         if args.len() < 2 {
-            return Err("Not enough arguments");
+            return Err(format!("Not enough arguments"));
         }
         
         let command_name: String;
